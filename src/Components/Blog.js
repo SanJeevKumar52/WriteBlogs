@@ -3,16 +3,24 @@ import { useState } from "react";
 //Blogging App using Hooks
 export default function Blog(){
 
-    const [title,setTitle] = useState("");
-    const [content,setcontent] = useState("");
+    /* const [title,setTitle] = useState("");
+    const [content,setcontent] = useState(""); */
+    const [formData,setFormData] =useState({title:"",content:""});
     const [blogs,setBlogs] = useState([]);
     
     //Passing the synthetic event as argument to stop refreshing the page on submit
     function handleSubmit(e){
         e.preventDefault();
 
-        setBlogs([{title,content},...blogs]);
+        setBlogs([{title:formData.title,content:formData.content},...blogs]);
+        /* setTitle("");
+        setcontent(""); */
+        setFormData({title:"",content:""});
         
+    }
+
+    function removeBlog(i){
+        setBlogs(blogs.filter((blog,index)=> i !==index));
     }
 
     return(
@@ -30,8 +38,8 @@ export default function Blog(){
                 <Row label="Title">
                         <input className="input"
                                 placeholder="Enter the Title of the Blog here.."
-                                value={title}
-                                onChange={(e)=> setTitle(e.target.value)}
+                                value={formData.title}
+                                onChange={(e)=> setFormData({title:e.target.value,content:formData.content})}
                                 />
                 </Row >
 
@@ -39,13 +47,13 @@ export default function Blog(){
                 <Row label="Content">
                         <textarea className="input content"
                                 placeholder="Content of the Blog goes here.."
-                                value={content}
-                                onChange={(e)=>setcontent(e.target.value)}
+                                value={formData.content}
+                                onChange={(e)=>setFormData({content: e.target.value,title:formData.title})}
                                 />
                 </Row >
 
                 {/* Button to submit the blog */}            
-                <button className = "btn">ADD</button>
+                <button className = "btn" >ADD</button>
             </form>
                      
         </div>
@@ -58,6 +66,12 @@ export default function Blog(){
             <div className="blog" key={i}>
                 <h3>{blog.title}</h3>
                 <p>{blog.content}</p>
+
+
+                <div className="blog-btn">
+                    <button className="btn remove" onClick={()=> removeBlog(i)}>Delete</button>
+
+                </div>
             </div>
          ))}
         
